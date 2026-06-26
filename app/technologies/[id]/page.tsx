@@ -12,11 +12,13 @@ export default async function TechnologyPage({
   const { id } = await params
 
   // Look up by slug — e.g. /technologies/diamond → slug = 'diamond'
-  const { data: tech, error } = await supabase
+  const { data, error } = await supabase
     .from('technologies')
     .select('name, report_markdown')
     .eq('slug', id)
     .single()
+
+  const tech = data as { name: string; report_markdown: string } | null
 
   if (error || !tech) notFound()
 
