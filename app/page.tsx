@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 export default async function HomePage() {
   const { data: technologies, error } = await supabase
     .from('technologies')
-    .select('id, name, full_name, patent_id, industry, confidence')
+    .select('id, slug, name, full_name, patent_id, industry, confidence')
     .order('confidence', { ascending: false })
 
   if (error) {
@@ -50,7 +50,7 @@ export default async function HomePage() {
           {rows.map((tech, i) => (
             <Link
               key={tech.id}
-              href={`/technologies/${tech.name.toLowerCase()}`}
+              href={`/technologies/${tech.slug}`}
               className={`
                 grid grid-cols-[1fr_140px_100px_32px] gap-4 items-center
                 px-5 py-4 group transition-colors hover:bg-gray-50

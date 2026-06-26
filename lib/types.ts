@@ -5,6 +5,7 @@ export type Database = {
         Row: {
           id: string             // UUID — Supabase generates this automatically
           created_at: string     // Timestamp — Supabase generates this automatically
+          slug: string           // URL-friendly identifier, e.g. "diamond"
           name: string           // Short name, e.g. "DIAMOND"
           full_name: string      // Full expansion of the acronym/name
           patent_id: string      // OSU technology ID, e.g. "TS-074364"
@@ -18,6 +19,7 @@ export type Database = {
         Insert: {
           id?: string            // Optional — Supabase auto-generates if omitted
           created_at?: string    // Optional — Supabase auto-generates if omitted
+          slug: string
           name: string
           full_name: string
           patent_id: string

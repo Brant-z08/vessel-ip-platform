@@ -11,11 +11,11 @@ export default async function TechnologyPage({
 }) {
   const { id } = await params
 
-  // Look up by name (case-insensitive) so /technologies/diamond matches "DIAMOND"
+  // Look up by slug — e.g. /technologies/diamond → slug = 'diamond'
   const { data: tech, error } = await supabase
     .from('technologies')
     .select('name, report_markdown')
-    .ilike('name', id)
+    .eq('slug', id)
     .single()
 
   if (error || !tech) notFound()
