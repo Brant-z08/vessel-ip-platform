@@ -31,6 +31,12 @@
 .vscode/
 .idea/
 
+# Claude Code — local machine settings, not part of the project
+.claude/settings.local.json
+
+# Unzipped skill files — the .zip is committed; don't also commit the extracted copy
+.claude/skills/first-principles-report/first-principles-report/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
