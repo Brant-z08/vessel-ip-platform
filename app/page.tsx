@@ -17,7 +17,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center">
-          <span className="text-sm font-medium text-gray-900">OSU IP Platform</span>
+          <span className="text-sm font-medium text-gray-900">Cambium</span>
         </div>
       </nav>
 

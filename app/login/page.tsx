@@ -11,7 +11,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-            OSU IP Platform
+            Cambium
           </h1>
           <p className="mt-2 text-sm text-gray-500">
             Enter your email and the shared password to continue.

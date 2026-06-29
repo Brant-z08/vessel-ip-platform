@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "OSU IP Platform",
+  title: "Cambium",
   description: "First-principles investment reports on Ohio State technologies.",
 };
 

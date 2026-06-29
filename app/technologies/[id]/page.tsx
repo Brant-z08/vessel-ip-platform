@@ -33,7 +33,7 @@ export default async function TechnologyPage({
           >
             <span aria-hidden>←</span> Technology Library
           </Link>
-          <span className="text-sm font-medium text-gray-900">OSU IP Platform</span>
+          <span className="text-sm font-medium text-gray-900">Cambium</span>
         </div>
       </nav>
 
