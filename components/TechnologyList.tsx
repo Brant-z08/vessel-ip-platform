@@ -58,7 +58,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
             placeholder="Search by name or tech ID…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder-gray-400 transition"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-scarlet focus:border-transparent placeholder-gray-400 transition"
           />
         </div>
 
@@ -69,7 +69,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
               onClick={() => setSelectedIndustry(null)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 !selectedIndustry
-                  ? 'bg-gray-900 text-white'
+                  ? 'bg-scarlet text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -83,7 +83,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
                 }
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                   selectedIndustry === industry
-                    ? 'bg-gray-900 text-white'
+                    ? 'bg-scarlet text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -137,11 +137,11 @@ export default function TechnologyList({ technologies }: { technologies: Technol
               </span>
 
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold text-gray-900">{tech.confidence}</span>
+                <span className="text-sm font-semibold text-scarlet">{tech.confidence}</span>
                 <span className="text-xs text-gray-400">/ 10</span>
               </div>
 
-              <span className="text-gray-300 group-hover:text-gray-600 transition-colors text-base leading-none justify-self-end">
+              <span className="text-gray-300 group-hover:text-scarlet transition-colors text-base leading-none justify-self-end">
                 →
               </span>
             </Link>

@@ -1,8 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --color-scarlet: #BB0000;
+}
+
 body {
   background: #ffffff;
-  color: #171717;
-  font-family: Arial, Helvetica, sans-serif;
+  color: #0a0a0a;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

@@ -29,7 +29,7 @@ export default async function TechnologyPage({
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link
             href="/"
-            className="text-sm text-gray-500 hover:text-gray-900 transition-colors flex items-center gap-1.5"
+            className="text-sm text-gray-500 hover:text-scarlet transition-colors flex items-center gap-1.5"
           >
             <span aria-hidden>←</span> Technology Library
           </Link>
