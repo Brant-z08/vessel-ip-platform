@@ -169,7 +169,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
               `}
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate group-hover:underline underline-offset-2">
+                <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-scarlet group-hover:underline underline-offset-2">
                   {tech.name}
                 </p>
                 <p className="text-xs text-gray-500 truncate mt-0.5">
