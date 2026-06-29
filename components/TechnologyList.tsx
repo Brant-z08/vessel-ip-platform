@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import Link from 'next/link'
 
 type Technology = {
@@ -16,14 +16,14 @@ type Technology = {
 export default function TechnologyList({ technologies }: { technologies: Technology[] }) {
   const [search, setSearch] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const filterRef = useRef<HTMLDivElement>(null)
 
-  // Pull unique industries from the data — updates automatically as rows are added
   const industries = useMemo(
     () => [...new Set(technologies.map(t => t.industry))].sort(),
     [technologies]
   )
 
-  // Recompute the visible list whenever search text or industry filter changes
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
     return technologies.filter(tech => {
@@ -38,6 +38,16 @@ export default function TechnologyList({ technologies }: { technologies: Technol
   }, [technologies, search, selectedIndustry])
 
   const isFiltering = search.trim() !== '' || selectedIndustry !== null
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+        setFilterOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <div>
@@ -62,34 +72,69 @@ export default function TechnologyList({ technologies }: { technologies: Technol
           />
         </div>
 
-        {/* Industry filter pills */}
-        {industries.length > 1 && (
-          <div className="flex items-center gap-2 flex-wrap">
+        {/* Filter dropdown */}
+        {industries.length > 0 && (
+          <div className="relative shrink-0" ref={filterRef}>
             <button
-              onClick={() => setSelectedIndustry(null)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                !selectedIndustry
-                  ? 'bg-scarlet text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              onClick={() => setFilterOpen(o => !o)}
+              className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors whitespace-nowrap ${
+                selectedIndustry
+                  ? 'border-scarlet text-scarlet bg-white'
+                  : 'border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:text-gray-900'
               }`}
             >
-              All
-            </button>
-            {industries.map(industry => (
-              <button
-                key={industry}
-                onClick={() =>
-                  setSelectedIndustry(selectedIndustry === industry ? null : industry)
-                }
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  selectedIndustry === industry
-                    ? 'bg-scarlet text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+              {/* Funnel icon */}
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 9h10M11 14h2" />
+              </svg>
+              <span>{selectedIndustry ?? 'Filter'}</span>
+              {/* Chevron */}
+              <svg
+                className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${filterOpen ? 'rotate-180' : ''}`}
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
               >
-                {industry}
-              </button>
-            ))}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {filterOpen && (
+              <div className="absolute top-full left-0 mt-1.5 w-56 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden py-1">
+                <button
+                  onClick={() => { setSelectedIndustry(null); setFilterOpen(false) }}
+                  className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
+                    !selectedIndustry
+                      ? 'text-scarlet font-medium bg-gray-50'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  All industries
+                  {!selectedIndustry && (
+                    <svg className="w-3.5 h-3.5 text-scarlet shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+                <div className="border-t border-gray-100 mx-2 my-1" />
+                {industries.map(industry => (
+                  <button
+                    key={industry}
+                    onClick={() => { setSelectedIndustry(industry); setFilterOpen(false) }}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
+                      selectedIndustry === industry
+                        ? 'text-scarlet font-medium bg-gray-50'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {industry}
+                    {selectedIndustry === industry && (
+                      <svg className="w-3.5 h-3.5 text-scarlet shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
