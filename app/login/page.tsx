@@ -2,18 +2,13 @@
 
 import { useActionState } from 'react'
 import { login } from './actions'
-import TreeMotif from '@/components/TreeMotif'
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, { error: '' })
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-white px-4 relative overflow-hidden">
-
-      <TreeMotif />
-
-      {/* ── Login form ── */}
-      <div className="w-full max-w-sm relative z-10">
+    <main className="min-h-screen flex items-center justify-center bg-white px-4">
+      <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold text-gray-950 tracking-tight">
             Cambium
@@ -23,7 +18,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="border border-gray-200 rounded-2xl p-8 bg-white/90 backdrop-blur-sm">
+        <div className="border border-gray-200 rounded-2xl p-8">
           <form action={action} className="space-y-5">
             <div>
               <label
