@@ -10,3 +10,21 @@ body {
   color: #0a0a0a;
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Conclusion callout — blockquotes inside reports */
+.prose blockquote {
+  background-color: #f9fafb;
+  border-left: 4px solid #BB0000;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  color: #374151;
+}
+.prose blockquote p {
+  font-style: normal;
+}
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: '' !important;
+}
