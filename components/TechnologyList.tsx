@@ -11,12 +11,37 @@ type Technology = {
   patent_id: string
   industry: string
   confidence: number
+  trl: number
+  zone: string
+}
+
+type SortField = 'confidence' | 'trl' | 'zone'
+
+function zoneToNum(zone: string | null | undefined): number {
+  if (!zone || zone.toLowerCase() === 'none') return 0
+  const n = parseInt(zone)
+  return isNaN(n) ? 0 : n
+}
+
+function zoneLabel(zone: string | null | undefined): string {
+  if (!zone || zone.toLowerCase() === 'none') return '—'
+  return `Z${zone}`
+}
+
+function zoneBadgeClass(zone: string | null | undefined): string {
+  const n = zoneToNum(zone)
+  if (n === 3) return 'bg-scarlet/10 text-scarlet font-semibold'
+  if (n === 2) return 'bg-gray-100 text-gray-700'
+  if (n === 1) return 'bg-gray-100 text-gray-500'
+  return 'text-gray-400'
 }
 
 export default function TechnologyList({ technologies }: { technologies: Technology[] }) {
   const [search, setSearch] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null)
   const [filterOpen, setFilterOpen] = useState(false)
+  const [sortBy, setSortBy] = useState<SortField>('confidence')
+  const [sortDesc, setSortDesc] = useState(true)
   const filterRef = useRef<HTMLDivElement>(null)
 
   const industries = useMemo(
@@ -37,6 +62,23 @@ export default function TechnologyList({ technologies }: { technologies: Technol
     })
   }, [technologies, search, selectedIndustry])
 
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      let aVal: number, bVal: number
+      if (sortBy === 'confidence') {
+        aVal = a.confidence ?? 0
+        bVal = b.confidence ?? 0
+      } else if (sortBy === 'trl') {
+        aVal = a.trl ?? 0
+        bVal = b.trl ?? 0
+      } else {
+        aVal = zoneToNum(a.zone)
+        bVal = zoneToNum(b.zone)
+      }
+      return sortDesc ? bVal - aVal : aVal - bVal
+    })
+  }, [filtered, sortBy, sortDesc])
+
   const isFiltering = search.trim() !== '' || selectedIndustry !== null
 
   useEffect(() => {
@@ -48,6 +90,20 @@ export default function TechnologyList({ technologies }: { technologies: Technol
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  function handleSort(field: SortField) {
+    if (sortBy === field) {
+      setSortDesc(d => !d)
+    } else {
+      setSortBy(field)
+      setSortDesc(true)
+    }
+  }
+
+  function SortIndicator({ field }: { field: SortField }) {
+    if (sortBy !== field) return <span className="ml-0.5 text-gray-300">↕</span>
+    return <span className="ml-0.5 text-scarlet">{sortDesc ? '↓' : '↑'}</span>
+  }
 
   return (
     <div>
@@ -83,12 +139,10 @@ export default function TechnologyList({ technologies }: { technologies: Technol
                   : 'border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:text-gray-900'
               }`}
             >
-              {/* Funnel icon */}
               <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 9h10M11 14h2" />
               </svg>
               <span>{selectedIndustry ?? 'Filter'}</span>
-              {/* Chevron */}
               <svg
                 className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${filterOpen ? 'rotate-180' : ''}`}
                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -102,9 +156,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
                 <button
                   onClick={() => { setSelectedIndustry(null); setFilterOpen(false) }}
                   className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
-                    !selectedIndustry
-                      ? 'text-scarlet font-medium bg-gray-50'
-                      : 'text-gray-700 hover:bg-gray-50'
+                    !selectedIndustry ? 'text-scarlet font-medium bg-gray-50' : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   All industries
@@ -120,9 +172,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
                     key={industry}
                     onClick={() => { setSelectedIndustry(industry); setFilterOpen(false) }}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
-                      selectedIndustry === industry
-                        ? 'text-scarlet font-medium bg-gray-50'
-                        : 'text-gray-700 hover:bg-gray-50'
+                      selectedIndustry === industry ? 'text-scarlet font-medium bg-gray-50' : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     {industry}
@@ -140,7 +190,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
       </div>
 
       {/* ── List ── */}
-      {filtered.length === 0 ? (
+      {sorted.length === 0 ? (
         <div className="border border-gray-200 rounded-xl px-6 py-16 text-center">
           <p className="text-sm font-medium text-gray-900">No results</p>
           <p className="text-sm text-gray-500 mt-1">
@@ -149,23 +199,47 @@ export default function TechnologyList({ technologies }: { technologies: Technol
         </div>
       ) : (
         <div className="border border-gray-200 rounded-xl overflow-hidden">
+
           {/* Column headers */}
-          <div className="grid grid-cols-[1fr_160px_100px_32px] gap-4 items-center px-5 py-2.5 bg-gray-50 border-b border-gray-200">
+          <div className="grid grid-cols-[1fr_130px_90px_56px_62px_32px] gap-4 items-center px-5 py-2.5 bg-gray-50 border-b border-gray-200">
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Technology</span>
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Industry</span>
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Confidence</span>
+            <button
+              onClick={() => handleSort('confidence')}
+              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
+                sortBy === 'confidence' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Confidence <SortIndicator field="confidence" />
+            </button>
+            <button
+              onClick={() => handleSort('trl')}
+              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
+                sortBy === 'trl' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              TRL <SortIndicator field="trl" />
+            </button>
+            <button
+              onClick={() => handleSort('zone')}
+              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
+                sortBy === 'zone' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Zone <SortIndicator field="zone" />
+            </button>
             <span />
           </div>
 
           {/* Rows */}
-          {filtered.map((tech, i) => (
+          {sorted.map((tech, i) => (
             <Link
               key={tech.id}
               href={`/technologies/${tech.slug}`}
               className={`
-                grid grid-cols-[1fr_160px_100px_32px] gap-4 items-center
+                grid grid-cols-[1fr_130px_90px_56px_62px_32px] gap-4 items-center
                 px-5 py-4 group transition-colors hover:bg-gray-50
-                ${i < filtered.length - 1 ? 'border-b border-gray-200' : ''}
+                ${i < sorted.length - 1 ? 'border-b border-gray-200' : ''}
               `}
             >
               <div className="min-w-0">
@@ -182,9 +256,15 @@ export default function TechnologyList({ technologies }: { technologies: Technol
               </span>
 
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold text-scarlet">{tech.confidence}</span>
+                <span className="text-sm font-semibold text-scarlet">{tech.confidence ?? '—'}</span>
                 <span className="text-xs text-gray-400">/ 10</span>
               </div>
+
+              <span className="text-sm text-gray-700">{tech.trl ?? '—'}</span>
+
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs w-fit ${zoneBadgeClass(tech.zone)}`}>
+                {zoneLabel(tech.zone)}
+              </span>
 
               <span className="text-gray-300 group-hover:text-scarlet transition-colors text-base leading-none justify-self-end">
                 →
@@ -197,7 +277,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
       {/* Result count — only shown while filtering */}
       {isFiltering && (
         <p className="mt-3 text-xs text-gray-400">
-          {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+          {sorted.length} {sorted.length === 1 ? 'result' : 'results'}
         </p>
       )}
     </div>

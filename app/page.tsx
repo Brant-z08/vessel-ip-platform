@@ -4,7 +4,7 @@ import TechnologyList from '@/components/TechnologyList'
 export default async function HomePage() {
   const { data: technologies, error } = await supabase
     .from('technologies')
-    .select('id, slug, name, full_name, patent_id, industry, confidence')
+    .select('id, slug, name, full_name, patent_id, industry, confidence, trl, zone')
     .order('confidence', { ascending: false })
 
   if (error) {
