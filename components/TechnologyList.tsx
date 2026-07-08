@@ -28,8 +28,8 @@ const SORT_LABELS: Record<ActiveSortField, string> = {
 
 function zoneToNum(zone: string | null | undefined): number {
   if (!zone || zone.toLowerCase() === 'none') return 0
-  const n = parseInt(zone)
-  return isNaN(n) ? 0 : n
+  const match = zone.match(/\d+/)
+  return match ? parseInt(match[0]) : 0
 }
 
 function zoneLabel(zone: string | null | undefined): string {
@@ -323,9 +323,8 @@ export default function TechnologyList({ technologies }: { technologies: Technol
 
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-semibold text-scarlet">
-                  {zoneToNum(tech.zone) || '—'}
+                  {zoneToNum(tech.zone) > 0 ? zoneToNum(tech.zone) : '—'}
                 </span>
-                <span className="text-xs text-gray-400">/ 3</span>
               </div>
 
               <span className="text-gray-300 group-hover:text-scarlet transition-colors text-base leading-none justify-self-end">
