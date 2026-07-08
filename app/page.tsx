@@ -5,7 +5,7 @@ export default async function HomePage() {
   const { data: technologies, error } = await supabase
     .from('technologies')
     .select('id, slug, name, full_name, patent_id, industry, confidence, trl, zone')
-    .order('confidence', { ascending: false })
+    .order('name', { ascending: true })
 
   if (error) {
     console.error('Failed to load technologies:', error.message)
