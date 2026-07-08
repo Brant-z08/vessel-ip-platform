@@ -316,11 +316,17 @@ export default function TechnologyList({ technologies }: { technologies: Technol
                 <span className="text-xs text-gray-400">/ 10</span>
               </div>
 
-              <span className="text-sm text-gray-700">{tech.trl ?? '—'}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-semibold text-scarlet">{tech.trl ?? '—'}</span>
+                <span className="text-xs text-gray-400">/ 9</span>
+              </div>
 
-              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs w-fit ${zoneBadgeClass(tech.zone)}`}>
-                {zoneLabel(tech.zone)}
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-semibold text-scarlet">
+                  {zoneToNum(tech.zone) || '—'}
+                </span>
+                <span className="text-xs text-gray-400">/ 3</span>
+              </div>
 
               <span className="text-gray-300 group-hover:text-scarlet transition-colors text-base leading-none justify-self-end">
                 →
