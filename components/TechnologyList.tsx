@@ -323,7 +323,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
 
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-semibold text-scarlet">
-                  {tech.zone && tech.zone.toLowerCase() !== 'none' ? tech.zone : '—'}
+                  {zoneToNum(tech.zone) > 0 ? zoneToNum(tech.zone) : '—'}
                 </span>
               </div>
 
