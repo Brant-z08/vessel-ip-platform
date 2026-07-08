@@ -17,6 +17,12 @@ type Technology = {
 
 type SortField = 'confidence' | 'trl' | 'zone'
 
+const SORT_LABELS: Record<SortField, string> = {
+  confidence: 'Confidence',
+  trl: 'TRL',
+  zone: 'Zone',
+}
+
 function zoneToNum(zone: string | null | undefined): number {
   if (!zone || zone.toLowerCase() === 'none') return 0
   const n = parseInt(zone)
@@ -42,7 +48,9 @@ export default function TechnologyList({ technologies }: { technologies: Technol
   const [filterOpen, setFilterOpen] = useState(false)
   const [sortBy, setSortBy] = useState<SortField>('confidence')
   const [sortDesc, setSortDesc] = useState(true)
+  const [sortOpen, setSortOpen] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
+  const sortRef = useRef<HTMLDivElement>(null)
 
   const industries = useMemo(
     () => [...new Set(technologies.map(t => t.industry))].sort(),
@@ -86,24 +94,25 @@ export default function TechnologyList({ technologies }: { technologies: Technol
       if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
         setFilterOpen(false)
       }
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false)
+      }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  function handleSort(field: SortField) {
+  function handleSortSelect(field: SortField) {
     if (sortBy === field) {
       setSortDesc(d => !d)
     } else {
       setSortBy(field)
       setSortDesc(true)
     }
+    setSortOpen(false)
   }
 
-  function SortIndicator({ field }: { field: SortField }) {
-    if (sortBy !== field) return <span className="ml-0.5 text-gray-300">↕</span>
-    return <span className="ml-0.5 text-scarlet">{sortDesc ? '↓' : '↑'}</span>
-  }
+  const isNonDefaultSort = sortBy !== 'confidence' || !sortDesc
 
   return (
     <div>
@@ -187,6 +196,54 @@ export default function TechnologyList({ technologies }: { technologies: Technol
             )}
           </div>
         )}
+
+        {/* Sort dropdown */}
+        <div className="relative shrink-0" ref={sortRef}>
+          <button
+            onClick={() => setSortOpen(o => !o)}
+            className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors whitespace-nowrap ${
+              isNonDefaultSort
+                ? 'border-scarlet text-scarlet bg-white'
+                : 'border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:text-gray-900'
+            }`}
+          >
+            {/* Sort icon */}
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M6 12h12M9 18h6" />
+            </svg>
+            <span>{SORT_LABELS[sortBy]} {sortDesc ? '↓' : '↑'}</span>
+            <svg
+              className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${sortOpen ? 'rotate-180' : ''}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {sortOpen && (
+            <div className="absolute top-full left-0 mt-1.5 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden py-1">
+              {(Object.keys(SORT_LABELS) as SortField[]).map(field => {
+                const isActive = sortBy === field
+                return (
+                  <button
+                    key={field}
+                    onClick={() => handleSortSelect(field)}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
+                      isActive ? 'text-scarlet font-medium bg-gray-50' : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>{SORT_LABELS[field]}</span>
+                    {isActive && (
+                      <span className="text-scarlet text-xs font-normal">
+                        {sortDesc ? 'High → Low' : 'Low → High'}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── List ── */}
@@ -204,30 +261,9 @@ export default function TechnologyList({ technologies }: { technologies: Technol
           <div className="grid grid-cols-[1fr_130px_90px_56px_62px_32px] gap-4 items-center px-5 py-2.5 bg-gray-50 border-b border-gray-200">
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Technology</span>
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Industry</span>
-            <button
-              onClick={() => handleSort('confidence')}
-              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
-                sortBy === 'confidence' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Confidence <SortIndicator field="confidence" />
-            </button>
-            <button
-              onClick={() => handleSort('trl')}
-              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
-                sortBy === 'trl' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              TRL <SortIndicator field="trl" />
-            </button>
-            <button
-              onClick={() => handleSort('zone')}
-              className={`text-xs font-medium uppercase tracking-wide text-left flex items-center gap-0.5 transition-colors ${
-                sortBy === 'zone' ? 'text-scarlet' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Zone <SortIndicator field="zone" />
-            </button>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Confidence</span>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">TRL</span>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Zone</span>
             <span />
           </div>
 
