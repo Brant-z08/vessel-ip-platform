@@ -15,9 +15,12 @@ type Technology = {
   zone: string
 }
 
-type SortField = 'confidence' | 'trl' | 'zone'
+type SortField = 'confidence' | 'trl' | 'zone' | null
 
-const SORT_LABELS: Record<SortField, string> = {
+const SORT_FIELDS = ['confidence', 'trl', 'zone'] as const
+type ActiveSortField = typeof SORT_FIELDS[number]
+
+const SORT_LABELS: Record<ActiveSortField, string> = {
   confidence: 'Confidence',
   trl: 'TRL',
   zone: 'Zone',
@@ -46,7 +49,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
   const [search, setSearch] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null)
   const [filterOpen, setFilterOpen] = useState(false)
-  const [sortBy, setSortBy] = useState<SortField>('confidence')
+  const [sortBy, setSortBy] = useState<SortField>(null)
   const [sortDesc, setSortDesc] = useState(true)
   const [sortOpen, setSortOpen] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
@@ -71,6 +74,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
   }, [technologies, search, selectedIndustry])
 
   const sorted = useMemo(() => {
+    if (!sortBy) return filtered
     return [...filtered].sort((a, b) => {
       let aVal: number, bVal: number
       if (sortBy === 'confidence') {
@@ -102,7 +106,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  function handleSortSelect(field: SortField) {
+  function handleSortSelect(field: ActiveSortField) {
     if (sortBy === field) {
       setSortDesc(d => !d)
     } else {
@@ -112,7 +116,10 @@ export default function TechnologyList({ technologies }: { technologies: Technol
     setSortOpen(false)
   }
 
-  const isNonDefaultSort = sortBy !== 'confidence' || !sortDesc
+  function clearSort() {
+    setSortBy(null)
+    setSortOpen(false)
+  }
 
   return (
     <div>
@@ -202,16 +209,15 @@ export default function TechnologyList({ technologies }: { technologies: Technol
           <button
             onClick={() => setSortOpen(o => !o)}
             className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors whitespace-nowrap ${
-              isNonDefaultSort
+              sortBy
                 ? 'border-scarlet text-scarlet bg-white'
                 : 'border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:text-gray-900'
             }`}
           >
-            {/* Sort icon */}
             <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M6 12h12M9 18h6" />
             </svg>
-            <span>{SORT_LABELS[sortBy]} {sortDesc ? '↓' : '↑'}</span>
+            <span>{sortBy ? `${SORT_LABELS[sortBy]} ${sortDesc ? '↓' : '↑'}` : 'Sort by'}</span>
             <svg
               className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${sortOpen ? 'rotate-180' : ''}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -222,7 +228,21 @@ export default function TechnologyList({ technologies }: { technologies: Technol
 
           {sortOpen && (
             <div className="absolute top-full left-0 mt-1.5 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden py-1">
-              {(Object.keys(SORT_LABELS) as SortField[]).map(field => {
+              <button
+                onClick={clearSort}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${
+                  !sortBy ? 'text-scarlet font-medium bg-gray-50' : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                No sort
+                {!sortBy && (
+                  <svg className="w-3.5 h-3.5 text-scarlet shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+              <div className="border-t border-gray-100 mx-2 my-1" />
+              {SORT_FIELDS.map(field => {
                 const isActive = sortBy === field
                 return (
                   <button
