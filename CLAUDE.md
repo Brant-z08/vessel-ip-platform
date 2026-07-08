@@ -45,7 +45,7 @@ Two core entities stored in Supabase:
 - Principal researcher(s), college, date disclosed, TRL, commercialization traction
 
 **Reports** — one row per technology, written once by the agent and stored:
-- The full 11-section first-principles report (stored, not regenerated on view)
+- The full first-principles report (stored, not regenerated on view)
 - Confidence score
 
 ---
@@ -54,23 +54,27 @@ Two core entities stored in Supabase:
 
 **List view** — searchable, sortable table of technologies. Default sort: highest displacement potential first. Sort/filter by industry tag. Each row shows name + minimal metadata.
 
-**Detail view** — click a technology → full first-principles report rendered in the 11-section structure below.
+**Detail view** — click a technology → full first-principles report rendered in the structure below.
 
 ---
 
-## Report structure (11 sections, in order)
+## Report structure
 
-1. Technology Related Links (OSU page, patents, decks)
-2. Technology Overview (executive summary)
-3. The Details (researchers, college, disclosure date, TRL, traction)
-4. Application Selection (chosen application + rationale)
-5. Status Quo (how the problem is solved today, in granular detail)
-6. New Value Transactions (what the technology changes vs. status quo)
-7. Value Overview (time saved / money saved / revenue enabled + **confidence score**)
-8. Displacement Process & Risks (switching costs, process change, regulatory/dev cycles)
-9. Team Overview (inventors + right to win)
-10. New Entrants (competing efforts)
-11. Thesis Analysis Summary (overall displacement judgment scored against the Vessel thesis)
+1. Technology Related Links (OSU page, patents, decks, inventor bios)
+2. Summary (3-sentence summary + one-line conclusion callout with 2–3 supporting bullets)
+3. Technology Overview (what it is and how it works)
+4. The Details (table: researchers, college, disclosure date, TRL, traction, market size estimate)
+5. Thesis Analysis (parent section containing subsections 0–8):
+   - 0. Application Selection (chosen application + TAM)
+   - 1. Status Quo (current market, what buyers use today, where it falls short)
+   - 2. New Value Transactions (gap-then-fill against the status quo)
+   - 3. Value Overview (cost/price build-up; time saved / money saved / revenue enabled)
+   - 4. Displacement Process (step-by-step buyer adoption walkthrough)
+   - 5. Displacement Risks (switching costs, regulatory cycles, trust, inertia)
+   - 6. Team Overview (inventor credentials, domain standing, commercial gap)
+   - 7. New Entrants (competing efforts; is the gap open or contested?)
+   - 8. Thesis Analysis Summary (Zone, TRL, confidence score woven into prose verdict)
+6. Additional Applications (optional; omit if none genuine)
 
 ---
 
@@ -129,7 +133,7 @@ The `first-principles-report` skill (`.claude/skills/first-principles-report/`) 
 - [ ] Live, password-protected URL
 - [ ] ~30–50 technologies, each with a reviewed first-principles report
 - [ ] List view with working sort + search by industry
-- [ ] Detail view rendering the full 11-section report structure
+- [ ] Detail view rendering the full report structure
 - [ ] At least one honest "limited potential" report included
 - [ ] Confidence scores present and sensible
 - [ ] Previewed with Scott before July 16
