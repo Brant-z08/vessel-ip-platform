@@ -68,7 +68,16 @@ export default async function TechnologyPage({
               prose-li:text-gray-700 prose-li:leading-7
             "
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{tech.report_markdown}</ReactMarkdown>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ href, children }) => (
+                  <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                ),
+              }}
+            >
+              {tech.report_markdown}
+            </ReactMarkdown>
           </article>
         </main>
       </div>
