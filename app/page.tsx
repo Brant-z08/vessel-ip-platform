@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import TechnologyList from '@/components/TechnologyList'
+import MetricsSidebar from '@/components/MetricsSidebar'
 
 export default async function HomePage() {
   const { data: technologies, error } = await supabase
@@ -43,22 +45,25 @@ export default async function HomePage() {
               <path d="M60,198 Q100,202 140,198" />
             </g>
           </svg>
-          <span className="text-xl font-bold text-gray-950 tracking-tight">Cambium</span>
+          <Link href="/" className="text-xl font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-            Technology Library
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {rows.length} {rows.length === 1 ? 'technology' : 'technologies'} · First-principles investment reports
-          </p>
-        </div>
+      <div className="flex items-start">
+        <MetricsSidebar />
 
-        <TechnologyList technologies={rows} />
-      </main>
+        <main className="flex-1 min-w-0 px-8 py-10">
+          <div className="mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
+              Technology Library
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {rows.length} {rows.length === 1 ? 'technology' : 'technologies'} · First-principles investment reports
+            </p>
+          </div>
+          <TechnologyList technologies={rows} />
+        </main>
+      </div>
     </div>
   )
 }
