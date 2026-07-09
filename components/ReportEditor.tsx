@@ -50,8 +50,12 @@ export default function ReportEditor({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ slug, name, full_name: fullName, industry, trl, confidence, zone, report_markdown: markdown }),
       })
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.error ?? 'Save failed')
+      if (!res.ok) {
+        const text = await res.text()
+        let message = `Server error ${res.status}`
+        try { message = JSON.parse(text).error ?? message } catch {}
+        throw new Error(message)
+      }
       setMode('view')
     } catch (e: unknown) {
       setSaveError(e instanceof Error ? e.message : 'Save failed')
