@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { logout } from '@/app/logout/actions'
 
 const METRICS: Record<string, {
   title: string
@@ -99,6 +100,11 @@ export default async function MetricPage({
           <Link href="/" className="text-sm font-medium text-gray-900 hover:text-scarlet transition-colors">
             Cambium
           </Link>
+          <form action={logout}>
+            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
+              Sign out
+            </button>
+          </form>
         </div>
       </nav>
 

@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
 import MetricsSidebar from '@/components/MetricsSidebar'
 import ReportEditor from '@/components/ReportEditor'
+import { logout } from '@/app/logout/actions'
 
 export default async function TechnologyPage({
   params,
@@ -49,6 +50,11 @@ export default async function TechnologyPage({
           <Link href="/" className="text-sm font-medium text-gray-900 hover:text-scarlet transition-colors">
             Cambium
           </Link>
+          <form action={logout}>
+            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
+              Sign out
+            </button>
+          </form>
         </div>
       </nav>
 

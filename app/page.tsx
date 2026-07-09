@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import TechnologyList from '@/components/TechnologyList'
 import MetricsSidebar from '@/components/MetricsSidebar'
+import { logout } from '@/app/logout/actions'
 
 export default async function HomePage() {
   const { data: technologies, error } = await supabase
@@ -46,6 +47,11 @@ export default async function HomePage() {
             </g>
           </svg>
           <Link href="/" className="text-xl font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
+          <form action={logout} className="ml-auto">
+            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
+              Sign out
+            </button>
+          </form>
         </div>
       </nav>
 
