@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
 import MetricsSidebar from '@/components/MetricsSidebar'
+import ReportEditor from '@/components/ReportEditor'
 
 export default async function TechnologyPage({
   params,
@@ -12,20 +12,32 @@ export default async function TechnologyPage({
 }) {
   const { id } = await params
 
-  // Look up by slug — e.g. /technologies/diamond → slug = 'diamond'
-  const { data, error } = await supabase
-    .from('technologies')
-    .select('name, report_markdown')
-    .eq('slug', id)
-    .single()
+  const [{ data, error }, cookieStore] = await Promise.all([
+    supabase
+      .from('technologies')
+      .select('slug, name, full_name, industry, trl, confidence, zone, report_markdown')
+      .eq('slug', id)
+      .single(),
+    cookies(),
+  ])
 
-  const tech = data as { name: string; report_markdown: string } | null
+  const tech = data as {
+    slug: string
+    name: string
+    full_name: string
+    industry: string
+    trl: number
+    confidence: number
+    zone: string
+    report_markdown: string
+  } | null
 
   if (error || !tech) notFound()
 
+  const isAdmin = cookieStore.get('admin')?.value === 'true'
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Top nav bar */}
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link
@@ -40,45 +52,21 @@ export default async function TechnologyPage({
         </div>
       </nav>
 
-      {/* Report body + sidebar */}
       <div className="flex items-start">
         <MetricsSidebar />
 
         <main className="flex-1 min-w-0 px-8 py-12">
-          <article
-            className="
-              prose prose-gray max-w-none
-
-              prose-h1:text-2xl prose-h1:font-bold prose-h1:tracking-tight prose-h1:text-gray-950
-              prose-h2:text-lg prose-h2:font-semibold prose-h2:text-gray-900 prose-h2:mt-10 prose-h2:mb-3
-              prose-h3:text-base prose-h3:font-semibold prose-h3:text-gray-800 prose-h3:mt-6 prose-h3:mb-2
-
-              prose-p:text-gray-700 prose-p:leading-7
-              prose-strong:text-gray-900 prose-strong:font-semibold
-
-              prose-table:text-sm
-              prose-th:text-left prose-th:font-semibold prose-th:text-gray-900 prose-th:bg-gray-50 prose-th:py-2 prose-th:px-4
-              prose-td:text-gray-700 prose-td:py-2 prose-td:px-4 prose-td:align-top
-              prose-thead:border-b prose-thead:border-gray-200
-
-              prose-hr:border-gray-200 prose-hr:my-8
-
-              prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-gray-600
-
-              prose-li:text-gray-700 prose-li:leading-7
-            "
-          >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                a: ({ href, children }) => (
-                  <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
-                ),
-              }}
-            >
-              {tech.report_markdown}
-            </ReactMarkdown>
-          </article>
+          <ReportEditor
+            slug={tech.slug}
+            isAdmin={isAdmin}
+            initialName={tech.name}
+            initialFullName={tech.full_name}
+            initialIndustry={tech.industry}
+            initialTrl={tech.trl}
+            initialConfidence={tech.confidence}
+            initialZone={tech.zone}
+            initialMarkdown={tech.report_markdown}
+          />
         </main>
       </div>
     </div>

@@ -4,11 +4,21 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 const SHARED_PASSWORD = 'vessel2026'
+const ADMIN_EMAIL = 'bzell@buildvessel.com'
+
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: 60 * 60 * 24 * 7,
+  path: '/',
+}
 
 export async function login(
   _prevState: { error: string },
   formData: FormData,
 ) {
+  const email = (formData.get('email') as string).trim().toLowerCase()
   const password = formData.get('password') as string
 
   if (password !== SHARED_PASSWORD) {
@@ -16,13 +26,11 @@ export async function login(
   }
 
   const cookieStore = await cookies()
-  cookieStore.set('auth_token', 'authenticated', {
-    httpOnly: true,                                    // JS in the browser can't read this
-    secure: process.env.NODE_ENV === 'production',     // HTTPS only in prod
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7,                         // Stay logged in for 7 days
-    path: '/',
-  })
+  cookieStore.set('auth_token', 'authenticated', COOKIE_OPTS)
+
+  if (email === ADMIN_EMAIL) {
+    cookieStore.set('admin', 'true', COOKIE_OPTS)
+  }
 
   redirect('/')
 }
