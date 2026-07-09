@@ -45,6 +45,23 @@ function zoneBadgeClass(zone: string | null | undefined): string {
   return 'text-gray-400'
 }
 
+function InfoTooltip({ text, align = 'center' }: { text: string; align?: 'left' | 'center' | 'right' }) {
+  const pos = align === 'left' ? 'left-0' : align === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
+  const arrow = align === 'left' ? 'left-3' : align === 'right' ? 'right-3' : 'left-1/2 -translate-x-1/2'
+  return (
+    <span className="relative group/tip inline-flex items-center">
+      <svg className="w-3 h-3 text-gray-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
+        <circle cx="12" cy="12" r="10" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4M12 8h.01" />
+      </svg>
+      <span className={`absolute ${pos} top-full mt-2 w-52 bg-gray-900 text-white rounded-lg px-3 py-2 text-xs leading-relaxed normal-case tracking-normal font-normal opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-xl`}>
+        <span className={`absolute ${arrow} -top-1 w-2 h-2 bg-gray-900 rotate-45`} aria-hidden="true" />
+        <span className="relative">{text}</span>
+      </span>
+    </span>
+  )
+}
+
 export default function TechnologyList({ technologies }: { technologies: Technology[] }) {
   const [search, setSearch] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null)
@@ -281,9 +298,18 @@ export default function TechnologyList({ technologies }: { technologies: Technol
           <div className="grid grid-cols-[1fr_130px_90px_56px_62px_32px] gap-4 items-center px-5 py-2.5 bg-gray-50 border-b border-gray-200">
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Technology</span>
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Industry</span>
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Confidence</span>
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">TRL</span>
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Zone</span>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-1">
+              Confidence
+              <InfoTooltip text="How much evidence exists that this technology delivers on its stated performance. 1 = concept only; 10 = deployed and revenue-generating." />
+            </span>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-1">
+              TRL
+              <InfoTooltip text="Standard scale for technical maturity. 1 = basic concept; 9 = proven in real-world use. Most OSU research sits at TRL 2–4." />
+            </span>
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center gap-1">
+              Zone
+              <InfoTooltip align="right" text="Vessel thesis: displacement potential on cost and experience axes. Zone 1 = incremental; Zone 3 = both axes — better experience at lower cost simultaneously." />
+            </span>
             <span />
           </div>
 
