@@ -10,7 +10,7 @@ const METRICS = [
 ]
 
 export default function MetricsSidebar() {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   if (!isOpen) {
     return (
