@@ -48,12 +48,6 @@ export default async function TechnologyPage({
             <span className="text-xs text-gray-400 font-normal">The living layer where ideas become ventures</span>
           </div>
           <div className="ml-auto flex items-center gap-5">
-            <Link
-              href="/"
-              className="text-sm text-gray-500 hover:text-scarlet transition-colors flex items-center gap-1.5"
-            >
-              <span aria-hidden>←</span> Technology Library
-            </Link>
             <form action={logout}>
               <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
                 Sign out
@@ -67,6 +61,12 @@ export default async function TechnologyPage({
         <MetricsSidebar />
 
         <main className="flex-1 min-w-0 px-8 py-12">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-scarlet transition-colors mb-8"
+          >
+            <span aria-hidden>←</span> Technology Library
+          </Link>
           <ReportEditor
             slug={tech.slug}
             isAdmin={isAdmin}
