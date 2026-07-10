@@ -19,7 +19,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center gap-2.5">
+        <div className="px-6 h-16 flex items-center gap-3">
           {/* Buckeye tree icon */}
           <svg width="32" height="32" viewBox="0 0 200 200" aria-hidden="true">
             <g fill="none" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +46,10 @@ export default async function HomePage() {
               <path d="M60,198 Q100,202 140,198" />
             </g>
           </svg>
-          <Link href="/" className="text-xl font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
+          <div className="flex flex-col leading-tight">
+            <Link href="/" className="text-xl font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
+            <span className="text-xs text-gray-400 font-normal">The living layer where ideas become ventures</span>
+          </div>
           <form action={logout} className="ml-auto">
             <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
               Sign out

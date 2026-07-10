@@ -90,21 +90,24 @@ export default async function MetricPage({
   return (
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-sm text-gray-500 hover:text-scarlet transition-colors flex items-center gap-1.5"
-          >
-            <span aria-hidden>←</span> Technology Library
-          </Link>
-          <Link href="/" className="text-sm font-medium text-gray-900 hover:text-scarlet transition-colors">
-            Cambium
-          </Link>
-          <form action={logout}>
-            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
-              Sign out
-            </button>
-          </form>
+        <div className="px-6 h-14 flex items-center gap-3">
+          <div className="flex flex-col leading-tight">
+            <Link href="/" className="text-sm font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
+            <span className="text-xs text-gray-400 font-normal">The living layer where ideas become ventures</span>
+          </div>
+          <div className="ml-auto flex items-center gap-5">
+            <Link
+              href="/"
+              className="text-sm text-gray-500 hover:text-scarlet transition-colors flex items-center gap-1.5"
+            >
+              <span aria-hidden>←</span> Technology Library
+            </Link>
+            <form action={logout}>
+              <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
       </nav>
 
