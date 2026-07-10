@@ -91,6 +91,8 @@ export default async function MetricPage({
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="px-6 h-14 flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="" className="h-7 w-auto" />
           <div className="flex flex-col leading-tight">
             <Link href="/" className="text-sm font-bold text-gray-950 tracking-tight hover:opacity-75 transition-opacity">Cambium</Link>
             <span className="text-xs text-gray-400 font-normal">The living layer where ideas become ventures</span>
