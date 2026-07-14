@@ -14,8 +14,8 @@ export default function MetricsSidebar() {
 
   if (!isOpen) {
     return (
-      <div className="hidden lg:flex shrink-0 w-10 flex-col items-center border-r border-gray-100 min-h-[calc(100vh-56px)]">
-        <div className="sticky top-14 pt-4 flex flex-col items-center gap-3">
+      <div className="hidden lg:flex shrink-0 w-10 flex-col items-center min-h-[calc(100vh-56px)]">
+        <div className="sticky top-14 mt-3 mx-1 flex flex-col items-center gap-3 bg-white rounded-2xl shadow-sm py-3 px-1">
           <button
             onClick={() => setIsOpen(true)}
             className="p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
@@ -34,8 +34,8 @@ export default function MetricsSidebar() {
   }
 
   return (
-    <div className="hidden lg:block shrink-0 w-60 border-r border-gray-100 min-h-[calc(100vh-56px)]">
-      <div className="sticky top-14 p-4">
+    <div className="hidden lg:block shrink-0 w-60 min-h-[calc(100vh-56px)]">
+      <div className="sticky top-14 m-3 bg-white rounded-2xl shadow-sm p-4">
         <div className="flex items-start justify-between mb-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide leading-relaxed">
             Understanding<br />the Metrics
