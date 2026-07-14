@@ -7,7 +7,10 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(login, { error: '' })
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-white px-4">
+    <main
+      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
+      style={{ backgroundImage: "url('/cambium-tree-background.svg')" }}
+    >
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold text-gray-950 tracking-tight">
@@ -18,7 +21,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="border border-gray-200 rounded-2xl p-8">
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <form action={action} className="space-y-5">
             <div>
               <label
