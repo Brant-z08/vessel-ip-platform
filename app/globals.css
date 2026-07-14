@@ -6,7 +6,11 @@
 }
 
 body {
-  background: #ffffff;
+  background-color: #ffffff;
+  background-image: url('/cambium-tree-background.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   color: #0a0a0a;
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

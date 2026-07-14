@@ -17,7 +17,7 @@ export default async function HomePage() {
   const rows = technologies ?? []
 
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/cambium-tree-background.svg')" }}>
+    <div className="min-h-screen">
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="px-6 h-16 flex items-center gap-3">
           {/* Logo */}
