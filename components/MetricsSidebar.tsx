@@ -14,7 +14,7 @@ export default function MetricsSidebar() {
 
   if (!isOpen) {
     return (
-      <div className="hidden lg:flex shrink-0 w-10 flex-col items-center border-r border-gray-100 min-h-[calc(100vh-56px)] bg-white">
+      <div className="hidden lg:flex shrink-0 w-10 flex-col items-center border-r border-gray-100 min-h-[calc(100vh-56px)]">
         <div className="sticky top-14 pt-4 flex flex-col items-center gap-3">
           <button
             onClick={() => setIsOpen(true)}
@@ -34,7 +34,7 @@ export default function MetricsSidebar() {
   }
 
   return (
-    <div className="hidden lg:block shrink-0 w-60 border-r border-gray-100 min-h-[calc(100vh-56px)] bg-white">
+    <div className="hidden lg:block shrink-0 w-60 border-r border-gray-100 min-h-[calc(100vh-56px)]">
       <div className="sticky top-14 p-4">
         <div className="flex items-start justify-between mb-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide leading-relaxed">

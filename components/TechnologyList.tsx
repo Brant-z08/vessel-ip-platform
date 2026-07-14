@@ -139,7 +139,7 @@ export default function TechnologyList({ technologies }: { technologies: Technol
   }
 
   return (
-    <div>
+    <div className="bg-white rounded-2xl p-6 shadow-sm">
       {/* ── Controls ── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
 

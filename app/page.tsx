@@ -38,7 +38,7 @@ export default async function HomePage() {
       <div className="flex items-start">
         <MetricsSidebar />
 
-        <main className="flex-1 min-w-0 px-8 py-10 bg-white">
+        <main className="flex-1 min-w-0 px-8 py-10">
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
               Technology Library
