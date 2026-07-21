@@ -4,6 +4,8 @@ import TechnologyList from '@/components/TechnologyList'
 import MetricsSidebar from '@/components/MetricsSidebar'
 import { logout } from '@/app/logout/actions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const { data: technologies, error } = await supabase
     .from('technologies')
